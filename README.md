@@ -2,19 +2,23 @@
 
 Минималистичный чат на React + TypeScript для отправки и получения текстовых сообщений Telegram через GREEN-API.
 
+Демо: [green-api-max-phi.vercel.app](https://green-api-max-phi.vercel.app)
+
 ## Возможности
 
 - подключение по `apiUrl`, `idInstance` и `apiTokenInstance`;
-- создание личного чата по номеру РФ/РБ или готовому `chatId`;
+- создание личного чата по номеру телефона, `@username` или готовому `chatId`;
+- проверка получателя методом `CheckAccount`;
 - отправка сообщений методом `SendMessage`;
 - получение сообщений через очередь `ReceiveNotification` с обязательным подтверждением `DeleteNotification`;
-- локальная история чатов без сохранения API-токена;
-- поиск по чатам, непрочитанные сообщения и адаптивная мобильная версия.
+- сохранение входа в пределах вкладки через `sessionStorage`;
+- локальная история чатов в `localStorage`;
+- поиск по чатам, непрочитанные сообщения и адаптивная мобильная версия;
 - удаление чата вместе с его локальной историей.
 
 ## Локальный запуск
 
-Требуется Node.js 20+.
+Требуется Node.js 20.19+ или 22.12+.
 
 ```bash
 npm install
@@ -36,7 +40,7 @@ npm run build
 3. На экране входа укажите `idInstance` и `apiTokenInstance`.
 4. Если в кабинете указан отличный от стандартного адрес `apiUrl`, раскройте «Изменить адрес API» и вставьте его.
 
-Токен хранится только в состоянии открытой вкладки. История переписки сохраняется в `localStorage` отдельно для каждого `idInstance`.
+Данные подключения хранятся в `sessionStorage`: вход сохраняется после перезагрузки и очищается при выходе или закрытии вкладки. История переписки сохраняется в `localStorage` отдельно для каждого `idInstance`.
 
 ## Структура
 
@@ -48,4 +52,4 @@ src/
   lib/storage.ts локальная история
 ```
 
-Документация: [SendMessage](https://green-api.com/v3/docs/api/sending/SendMessage/), [HTTP API](https://green-api.com/v3/docs/api/receiving/technology-http-api/).
+Документация: [CheckAccount](https://green-api.com/telegram/docs/api/service/CheckAccount/), [SendMessage](https://green-api.com/telegram/docs/api/sending/SendMessage/), [HTTP API](https://green-api.com/telegram/docs/api/receiving/technology-http-api/).

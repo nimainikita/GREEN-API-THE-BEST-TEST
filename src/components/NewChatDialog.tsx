@@ -60,7 +60,7 @@ export function NewChatDialog({ open, onClose, onCreate }: NewChatDialogProps) {
           </button>
         </header>
 
-        <label className="field">
+        <label className="field recipient-field">
           <span>Получатель</span>
           <span className="field__control field__control--plain">
             <input
@@ -69,11 +69,15 @@ export function NewChatDialog({ open, onClose, onCreate }: NewChatDialogProps) {
                 setRecipient(event.target.value);
                 setError('');
               }}
-            placeholder="+7 999 123-45-67, @username или chatId"
+              placeholder="+7 999 123-45-67, @username или chatId"
+              aria-describedby="recipient-tooltip"
               autoFocus
             />
           </span>
-          <small>Для номера или @username приложение сначала получит корректный chatId</small>
+          <span className="recipient-tooltip" id="recipient-tooltip" role="tooltip">
+            Telegram может временно ограничить поиск по номеру. Если появится ошибка
+            «Rate limited by messenger», подождите несколько часов или используйте @username.
+          </span>
         </label>
 
         <label className="field">

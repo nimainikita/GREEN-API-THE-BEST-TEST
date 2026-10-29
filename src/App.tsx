@@ -6,7 +6,13 @@ import { NewChatDialog } from './components/NewChatDialog';
 import { Sidebar } from './components/Sidebar';
 import { checkAccount, deleteNotification, receiveNotification, sendMessage } from './lib/api';
 import { formatRecipient, notificationToChat } from './lib/chat';
-import { loadChats, saveChats } from './lib/storage';
+import {
+  clearCredentials,
+  loadChats,
+  loadCredentials,
+  saveChats,
+  saveCredentials,
+} from './lib/storage';
 import type { Chat, ChatMessage, Credentials } from './types';
 
 const sortChats = (chats: Chat[]) => [...chats].sort((a, b) => b.updatedAt - a.updatedAt);
@@ -21,9 +27,11 @@ const delay = (duration: number, signal: AbortSignal) =>
   });
 
 function App() {
-  const [credentials, setCredentials] = useState<Credentials | null>(null);
-  const [chats, setChats] = useState<Chat[]>([]);
-  const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
+  const [credentials, setCredentials] = useState<Credentials | null>(() => loadCredentials());
+  const [chats, setChats] = useState<Chat[]>(() =>
+    credentials ? sortChats(loadChats(credentials.idInstance)) : [],
+  );
+  const [selectedChatId, setSelectedChatId] = useState<string | null>(() => chats[0]?.id ?? null);
   const [query, setQuery] = useState('');
   const [newChatOpen, setNewChatOpen] = useState(false);
   const [connection, setConnection] = useState<'connecting' | 'online' | 'offline'>('connecting');
@@ -131,6 +139,7 @@ function App() {
 
   const connect = (nextCredentials: Credentials) => {
     const storedChats = sortChats(loadChats(nextCredentials.idInstance));
+    saveCredentials(nextCredentials);
     setCredentials(nextCredentials);
     setChats(storedChats);
     setSelectedChatId(storedChats[0]?.id ?? null);
@@ -138,6 +147,7 @@ function App() {
   };
 
   const logout = () => {
+    clearCredentials();
     setCredentials(null);
     setChats([]);
     setSelectedChatId(null);
